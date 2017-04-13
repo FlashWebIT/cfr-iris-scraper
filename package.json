@@ -1,0 +1,16 @@
+{
+  "name": "cfr-iris-scraper",
+  "version": "1.0.0",
+  "description": "Live train information: srape-powered API with JSON endpoints for the Romanian national railway infrastructure company CFR S.A's realtime information web interface IRIS (built by state-railway IT company InfoFer).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "Apache License 2.0",
+  "dependencies": {
+    "cheerio": "^0.22.0",
+    "cheerio-tableparser": "^1.0.1",
+    "express": "^4.15.2"
+  }
+}
