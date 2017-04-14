@@ -19,7 +19,9 @@ express.get('/station/:id*', function(req, res, next) {
     newArray.shift();
     output = [];
     for (var i = 0; i < newArray.length; i++) {
-      output.push({train: newArray[i][1], type: newArray[i][0], operator: newArray[i][2], from: newArray[i][3], to: newArray[i][7], arrive: newArray[i][5], depart: newArray[i][6], line: newArray[i][8], delay: newArray[i][4]});
+    	if (newArray[i][3]) { from = newArray[i][3].split(/[0-9]/)[0].replace(/\s\s*$/, ''); originatingdepart = newArray[i][3].match(/([0-9\:]+)/)[0]; } else { from = ''; originatingdepart = ''; }
+    	if (newArray[i][7]) { to = newArray[i][7].split(/[0-9]/)[0].replace(/\s\s*$/, ''); finalarrive = newArray[i][7].match(/([0-9\:]+)/)[0] } else  { to = ''; finalarrive = ''; }
+      output.push({train: newArray[i][1], type: newArray[i][0], operator: newArray[i][2], from: from, originatingdepart: originatingdepart, to: to, finalarrive: finalarrive, arrive: newArray[i][5], depart: newArray[i][6], line: newArray[i][8], delay: newArray[i][4]});
     } }
   res.send(JSON.stringify(output));
 });  
