@@ -3,6 +3,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
+## [2.0.0] - 2019-08-16
+### Changed
+- Improved the scraper such that it makes use of the __VIEWSTATE variables passed down by the server.
+- Ported all the code to Python for a more portable solution
+- Improved performance relative to 1.x
+- Changed the license.
+### Added
+- Multi-page train support
+- Support for the average speed field
+- Support for cancelled trains
+- Station list endpoint
+### Broke
+- Removed all legacy JavaScript code.
 
 ## [1.0.1] - 2017-04-26
 ### Changed
