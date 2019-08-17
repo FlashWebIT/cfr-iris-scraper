@@ -1,9 +1,12 @@
 from viewstate import ViewState
 from src import config
-import requests_html, datetime
+import requests_html
+from datetime import datetime, timedelta
 from pprint import pprint
 
 base_url = "https://appiris.infofer.ro/MyTrainRO.aspx?tren={}"
+
+midnight_rollovers=0
 
 def get_station_ID_by_name(name):
     for x in config.global_station_list:
@@ -41,7 +44,7 @@ def state_decoder(state):
         		'id': get_station_ID_by_name(info_box[13][1][1][0][0][1].split("[")[0].strip())
         	},
         	'status': info_box[13][1][1][0][0][1].split("[")[1].strip()[:-1],
-        	'time': None if (info_box[15][1][1][0][0][1]=='' or info_box[15][1][1][0][0][1]=='&nbsp;') else int(datetime.datetime.timestamp(datetime.datetime.strptime(info_box[15][1][1][0][0][1],'%d.%m.%Y %H:%M')))
+        	'time': None if (info_box[15][1][1][0][0][1]=='' or info_box[15][1][1][0][0][1]=='&nbsp;') else int(datetime.timestamp(datetime.strptime(info_box[15][1][1][0][0][1],'%d.%m.%Y %H:%M')))
         },
         'delay': None if info_box[17][1][1][0][0][1]=='' else int(info_box[17][1][1][0][0][1]),
         'destination': info_box[19][1][1][0][0][1],
@@ -51,7 +54,7 @@ def state_decoder(state):
         		'name': info_box[23][1][1][0][0][1].strip(),
         		'id': get_station_ID_by_name(info_box[23][1][1][0][0][1].strip())
         	},
-        	'time': None if (info_box[25][1][1][0][0][1]=='' or info_box[25][1][1][0][0][1]=='&nbsp;') else int(datetime.datetime.timestamp(datetime.datetime.strptime(info_box[25][1][1][0][0][1],'%d.%m.%Y %H:%M')))
+        	'time': None if (info_box[25][1][1][0][0][1]=='' or info_box[25][1][1][0][0][1]=='&nbsp;') else int(datetime.timestamp(datetime.strptime(info_box[25][1][1][0][0][1],'%d.%m.%Y %H:%M')))
         },
         'distance': info_box[27][1][1][0][0][1][:-1],
         'trip_duration': info_box[29][1][1][0][0][1][:-1],
