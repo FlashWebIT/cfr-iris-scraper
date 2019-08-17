@@ -1,9 +1,17 @@
 from viewstate import ViewState
+from src import config
 import requests_html
 from pprint import pprint
 
 base_url = "https://appiris.infofer.ro/MyTrainRO.aspx?tren={}"
 
+def get_station_ID_by_name(name):
+    for x in config.global_station_list:
+        if x["name"] == name:
+            return x["station_id"]
+            break
+    else:
+        return None
 
 def extract_viewstate(reply):
     state = reply.html.find('#__VIEWSTATE', first=True)
@@ -64,7 +72,7 @@ def state_decoder(state):
             entry_data = {
                 'milepost': entry[1][0][0][1],
                 'station': entry[3][0][0][1],
-                'station_id': None,
+                'station_id': get_station_ID_by_name(entry[3][0][0][1]),
                 'arrival_time': entry[5][0][0][1],
                 'stop_duration': entry[7][0][0][1],
                 'departure_time': entry[9][0][0][1],
