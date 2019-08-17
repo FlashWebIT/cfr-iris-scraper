@@ -63,14 +63,14 @@ offer their own API with proper rules and licensing at some point.
 #### Known limitations:
 - Requests are not authenticated and no rate limiting is implemented, so it's in no way ready to be exposed on the web.
 - This is not particularly fast, because the CFR Webpage isn't either. You'll probably want background requests and
-caching. After the initial request is made, it'll wait 8 seconds before parsing the data. If data hasn't been displayed
+caching. ~~After the initial request is made, it'll wait 8 seconds before parsing the data. If data hasn't been displayed
 on the webpage, it will wait an additional 20 seconds. After this, the API will output a blank object - this may mean
 that the scraped web service is down, it is really slow to respond or there are really no current trips stopping at that
-particular station (at night or at a small stop, for example).
+particular station (at night or at a small stop, for example).~~ Fixed: if the API is down you'll get a 5xx error status. 
 - This is scraping and parsing, so any structural update to the CFR webpage, while highly unlikely in the near future
 may break this.
-- The train information feed does not provide the details regarding the train's delays and other useful information that
-Infofer offers with their service. This will be updated in the future.
+- ~~The train information feed does not provide the details regarding the train's delays and other useful information that
+Infofer offers with their service. This will be updated in the future.~~ Fixed: all public IRIS information is outputted on this API.
 
 Public information web-service provided by CFR S.A. through Informatica Feroviara:
 http://appiris.infofer.ro/SosPlcRO.aspx, http://appiris.infofer.ro/MyTrainRO.aspx,
