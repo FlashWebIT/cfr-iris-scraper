@@ -4,6 +4,7 @@ from pprint import pprint
 from flask import Flask, jsonify
 app = Flask(__name__)
 
+global_station_list = StationsGetter.get_stations();
 
 @app.route('/')
 def hello_world():
@@ -17,8 +18,7 @@ def get_train(train_id):
 
 @app.route('/get-stations/')
 def get_stations():
-    station_list = StationsGetter.get_stations()
-    return jsonify(station_list)\
+    return jsonify(global_station_list)\
 
 @app.route('/station/<int:station_id>')
 def get_timetable(station_id):
