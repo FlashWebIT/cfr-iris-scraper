@@ -21,21 +21,21 @@ $ pipenv install
 
 ## Usage
 ### Station information
-Now you can point your browser to http://localhost:9090/station/ID to see the magic. ID is the unique station-unit code;
-a list is provided by the http://localhost:9090/get-stations/ endpoint.
+Now you can point your browser to http://localhost:5000/station/ID to see the magic. ID is the unique station-unit code;
+a list is provided by the http://localhost:5000/get-stations/ endpoint.
 
 For example, to get a JSON object with the current departure/arrival board & delay information for the Bucharest North
 railway station (the main & biggest one in our country), you would point your browser or the URL variable for whatever
-app you are consuming the data with to: http://localhost:9090/station/10017.
+app you are consuming the data with to: http://localhost:5000/station/10017.
 
 ### Train information
 In the same way you can get the current trains in a certain railway station, you can get the current information for a
 certain train. CFR provides information such as delays, the last station the train has passed (with a 7-minute delay),
 the next station and other useful information.
 
-Just point your browser to http://localhost:9090/train/ID, where ID is the train's unique number. You can get these IDs
+Just point your browser to http://localhost:5000/train/ID, where ID is the train's unique number. You can get these IDs
 from the station information feed. For example, you can retrieve the information for train IR 1651 from Bucharest North
-to Suceava North (valid as of April 2017) by accessing http://localhost:9090/train/1651.
+to Suceava North (valid as of April 2017) by accessing http://localhost:5000/train/1651.
 
 ## Ideas
 While the official apps themselves work but may not look so great, romanian developers did their best to create some
