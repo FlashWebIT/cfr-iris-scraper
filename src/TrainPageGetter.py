@@ -41,7 +41,7 @@ def state_decoder(state):
         		'id': get_station_ID_by_name(info_box[13][1][1][0][0][1].split("[")[0].strip())
         	},
         	'status': info_box[13][1][1][0][0][1].split("[")[1].strip()[:-1],
-        	'time': info_box[15][1][1][0][0][1]
+        	'time': None if (info_box[15][1][1][0][0][1]=='' or info_box[15][1][1][0][0][1]=='&nbsp;') else int(datetime.datetime.timestamp(datetime.datetime.strptime(info_box[15][1][1][0][0][1],'%d.%m.%Y %H:%M')))
         },
         'delay': None if info_box[17][1][1][0][0][1]=='' else int(info_box[17][1][1][0][0][1]),
         'destination': info_box[19][1][1][0][0][1],
@@ -51,11 +51,11 @@ def state_decoder(state):
         		'name': info_box[23][1][1][0][0][1].strip(),
         		'id': get_station_ID_by_name(info_box[23][1][1][0][0][1].strip())
         	},
-        	'time': info_box[25][1][1][0][0][1]
+        	'time': None if (info_box[25][1][1][0][0][1]=='' or info_box[25][1][1][0][0][1]=='&nbsp;') else int(datetime.datetime.timestamp(datetime.datetime.strptime(info_box[25][1][1][0][0][1],'%d.%m.%Y %H:%M')))
         },
-        'distance': info_box[27][1][1][0][0][1],
-        'trip_duration': info_box[29][1][1][0][0][1],
-        'average_speed': info_box[31][1][1][0][0][1],
+        'distance': info_box[27][1][1][0][0][1][:-1],
+        'trip_duration': info_box[29][1][1][0][0][1][:-1],
+        'average_speed': info_box[31][1][1][0][0][1][:-1],
     }
 
     # Collect the route info box data, if available
