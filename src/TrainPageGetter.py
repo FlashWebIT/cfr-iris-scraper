@@ -6,8 +6,6 @@ from pprint import pprint
 
 base_url = "https://appiris.infofer.ro/MyTrainRO.aspx?tren={}"
 
-midnight_rollovers=0
-
 def get_station_ID_by_name(name):
     for x in config.global_station_list:
         if x["name"] == name:
@@ -27,6 +25,9 @@ def extract_viewstate(reply):
     return state_value
 
 def state_decoder(state):
+    last_timestamp_arrival=0
+    last_timestamp_departure=0
+
     main_page = state[0][1][1][1][1][3][1][1][1]
     departure_date = main_page[13][0][0][0][7]
 
@@ -43,7 +44,7 @@ def state_decoder(state):
         		'name': info_box[13][1][1][0][0][1].split("[")[0].strip(),
         		'id': get_station_ID_by_name(info_box[13][1][1][0][0][1].split("[")[0].strip())
         	},
-        	'status': info_box[13][1][1][0][0][1].split("[")[1].strip()[:-1],
+        	'status': info_box[13][1][1][0][0][1].split("[")[1].strip()[:-1] if ('[' in info_box[13][1][1][0][0][1]) else info_box[13][1][1][0][0][1],
         	'time': None if (info_box[15][1][1][0][0][1]=='' or info_box[15][1][1][0][0][1]=='&nbsp;') else int(datetime.timestamp(datetime.strptime(info_box[15][1][1][0][0][1],'%d.%m.%Y %H:%M')))
         },
         'delay': None if info_box[17][1][1][0][0][1]=='' else int(info_box[17][1][1][0][0][1]),
@@ -83,18 +84,46 @@ def state_decoder(state):
         for entry_number in range(1, int(len(route_info_box) / 2)):
             entry = route_info_box[2 * entry_number - 1][1]
 
+            if(entry[5][0][0][1]!=' ' and entry[5][0][0][1]!='&nbsp;'):
+                temp_date = departure_date.split(' ')[2] + ' ' + entry[5][0][0][1]
+                tscalc = datetime.timestamp(datetime.strptime(temp_date,'%d.%m.%Y %H:%M'))
+                temp_date = datetime.strptime(temp_date,'%d.%m.%Y %H:%M')
+                if(last_timestamp_arrival==0):
+                    last_timestamp_arrival=tscalc
+                else: 
+                	if(last_timestamp_arrival>tscalc):
+                		temp_date = temp_date + timedelta(days=1)
+                last_timestamp_arrival=datetime.timestamp(temp_date)
+                arrival_timestamp = int(datetime.timestamp(temp_date))
+            else:
+            	arrival_timestamp = None
+
+            if(entry[9][0][0][1]!=' ' and entry[9][0][0][1]!='&nbsp;'):
+                temp_date = departure_date.split(' ')[2] + ' ' + entry[9][0][0][1]
+                tscalc = datetime.timestamp(datetime.strptime(temp_date,'%d.%m.%Y %H:%M'))
+                temp_date = datetime.strptime(temp_date,'%d.%m.%Y %H:%M')
+                if(last_timestamp_departure==0):
+                    last_timestamp_departure=tscalc
+                else: 
+                	if(last_timestamp_departure>tscalc):
+                		temp_date = temp_date + timedelta(days=1)
+                last_timestamp_departure=datetime.timestamp(temp_date)
+                departure_timestamp = int(datetime.timestamp(temp_date))
+            else:
+            	departure_timestamp = None
+
             entry_data = {
                 'milepost': None if entry[1][0][0][1]=='' else int(entry[1][0][0][1]),
                 'station': {
                 	'name': entry[3][0][0][1].strip(),
                 	'id': get_station_ID_by_name(entry[3][0][0][1].strip()),
                 },
-                'arrival_time': entry[5][0][0][1],
+                'arrival_time': arrival_timestamp,
                 'stop_duration': None if (entry[7][0][0][1]=='' or entry[7][0][0][1]=='&nbsp;') else int(entry[7][0][0][1]),
-                'departure_time': entry[9][0][0][1],
+                'departure_time': departure_timestamp,
                 'is_real_time': True if entry[11][0][0][1]=='Real' else False,
-                'delay': None if (entry[13][0][0][1]=='' or entry[13][0][0][1]=='&nbsp;') else int(entry[13][0][0][1]),
-                'mentions': entry[15][0][0][1],
+                'delay': 0 if (entry[13][0][0][1]=='' or entry[13][0][0][1]=='&nbsp;') else int(entry[13][0][0][1]),
+                'mentions': None if (entry[15][0][0][1]=='' or entry[15][0][0][1]=='&nbsp;') else entry[15][0][0][1],
             }
 
             try:
