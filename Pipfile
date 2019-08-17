@@ -11,4 +11,4 @@ flask = "*"
 viewstate = {git = "https://github.com/TiberiuD/viewstate"}
 
 [requires]
-python_version = "3.7"
+python_version = "3.6.5"

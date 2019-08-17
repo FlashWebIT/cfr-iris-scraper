@@ -29,7 +29,7 @@ def state_decoder(state):
         'status': info_box[11][1][1][0][0][1],
         'latest_status': info_box[13][1][1][0][0][1],
         'latest_status_time': info_box[15][1][1][0][0][1],
-        'delay': info_box[17][1][1][0][0][1],
+        'delay': None if info_box[17][1][1][0][0][1]=='' else int(info_box[17][1][1][0][0][1]),
         'destination': info_box[19][1][1][0][0][1],
         'arrival_time': info_box[21][1][1][0][0][1],
         'next_stop': info_box[23][1][1][0][0][1],
