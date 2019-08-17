@@ -11,7 +11,7 @@ def hello_world():
     return 'Hello, World!'
 
 
-@app.route('/train/<int:train_id>')
+@app.route('/train/<string:train_id>')
 def get_train(train_id):
     train_list = TrainPageGetter.get_train(train_id)
     return jsonify(train_list)
