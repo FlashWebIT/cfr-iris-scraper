@@ -1,6 +1,6 @@
 from viewstate import ViewState
 from src import config
-import requests_html
+import requests_html, datetime
 from pprint import pprint
 
 base_url = "https://appiris.infofer.ro/MyTrainRO.aspx?tren={}"
@@ -35,8 +35,11 @@ def state_decoder(state):
         'operator': info_box[7][1][1][0][0][1],
         'route': info_box[9][1][1][0][0][1],
         'status': info_box[11][1][1][0][0][1],
-        'latest_status': info_box[13][1][1][0][0][1],
-        'latest_status_time': info_box[15][1][1][0][0][1],
+        'latest_information': {
+        	'stop': info_box[13][1][1][0][0][1].split("[")[0].strip(),
+        	'status': info_box[13][1][1][0][0][1].split("[")[1].strip()[:-1],
+        	'time': info_box[15][1][1][0][0][1]
+        },
         'delay': None if info_box[17][1][1][0][0][1]=='' else int(info_box[17][1][1][0][0][1]),
         'destination': info_box[19][1][1][0][0][1],
         'arrival_time': info_box[21][1][1][0][0][1],
