@@ -47,7 +47,7 @@ def state_decoder(state):
         'destination': info_box[19][1][1][0][0][1],
         'arrival_time': info_box[21][1][1][0][0][1],
         'next_stop': {
-        	'stop': { 
+        	'station': { 
         		'name': info_box[23][1][1][0][0][1].strip(),
         		'id': get_station_ID_by_name(info_box[23][1][1][0][0][1].strip())
         	},
