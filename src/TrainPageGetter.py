@@ -71,8 +71,8 @@ def state_decoder(state):
 
             entry_data = {
                 'milepost': entry[1][0][0][1],
-                'station': entry[3][0][0][1],
-                'station_id': get_station_ID_by_name(entry[3][0][0][1]),
+                'station': entry[3][0][0][1].strip(),
+                'station_id': get_station_ID_by_name(entry[3][0][0][1].strip()),
                 'arrival_time': entry[5][0][0][1],
                 'stop_duration': entry[7][0][0][1],
                 'departure_time': entry[9][0][0][1],
