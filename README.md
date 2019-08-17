@@ -21,21 +21,21 @@ $ pipenv install
 
 ## Usage
 ### Station information
-Now you can point your browser to http://localhost:9090/station/ID to see the magic. ID is the unique station-unit code;
-a list is provided by the http://localhost:9090/get-stations/ endpoint.
+Now you can point your browser to http://localhost:5000/station/ID to see the magic. ID is the unique station-unit code;
+a list is provided by the http://localhost:5000/get-stations/ endpoint.
 
 For example, to get a JSON object with the current departure/arrival board & delay information for the Bucharest North
 railway station (the main & biggest one in our country), you would point your browser or the URL variable for whatever
-app you are consuming the data with to: http://localhost:9090/station/10017.
+app you are consuming the data with to: http://localhost:5000/station/10017.
 
 ### Train information
 In the same way you can get the current trains in a certain railway station, you can get the current information for a
 certain train. CFR provides information such as delays, the last station the train has passed (with a 7-minute delay),
 the next station and other useful information.
 
-Just point your browser to http://localhost:9090/train/ID, where ID is the train's unique number. You can get these IDs
+Just point your browser to http://localhost:5000/train/ID, where ID is the train's unique number. You can get these IDs
 from the station information feed. For example, you can retrieve the information for train IR 1651 from Bucharest North
-to Suceava North (valid as of April 2017) by accessing http://localhost:9090/train/1651.
+to Suceava North (valid as of April 2017) by accessing http://localhost:5000/train/1651.
 
 ## Ideas
 While the official apps themselves work but may not look so great, romanian developers did their best to create some
@@ -63,14 +63,14 @@ offer their own API with proper rules and licensing at some point.
 #### Known limitations:
 - Requests are not authenticated and no rate limiting is implemented, so it's in no way ready to be exposed on the web.
 - This is not particularly fast, because the CFR Webpage isn't either. You'll probably want background requests and
-caching. After the initial request is made, it'll wait 8 seconds before parsing the data. If data hasn't been displayed
+caching. ~~After the initial request is made, it'll wait 8 seconds before parsing the data. If data hasn't been displayed
 on the webpage, it will wait an additional 20 seconds. After this, the API will output a blank object - this may mean
 that the scraped web service is down, it is really slow to respond or there are really no current trips stopping at that
-particular station (at night or at a small stop, for example).
+particular station (at night or at a small stop, for example).~~ Fixed: if the API is down you'll get a 5xx error status. 
 - This is scraping and parsing, so any structural update to the CFR webpage, while highly unlikely in the near future
 may break this.
-- The train information feed does not provide the details regarding the train's delays and other useful information that
-Infofer offers with their service. This will be updated in the future.
+- ~~The train information feed does not provide the details regarding the train's delays and other useful information that
+Infofer offers with their service. This will be updated in the future.~~ Fixed: all public IRIS information is outputted on this API.
 
 Public information web-service provided by CFR S.A. through Informatica Feroviara:
 http://appiris.infofer.ro/SosPlcRO.aspx, http://appiris.infofer.ro/MyTrainRO.aspx,
