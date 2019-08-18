@@ -64,6 +64,11 @@ def state_decoder(state):
     # Other information
     destination_station = info_box[19][1][1][0][0][1]
 
+    destination_arrival_time_raw = info_box[21][1][1][0][0][1]
+    destination_arrival_time = None
+    if destination_arrival_time_raw and destination_arrival_time_raw != '&nbsp;':
+        destination_arrival_time = datetime.timestamp(datetime.strptime(destination_arrival_time_raw, '%d.%m.%Y %H:%M'))       
+
     # Build the data dict
     info_box_data = {
         'rank': info_box[3][1][1][0][0][1],
@@ -80,9 +85,13 @@ def state_decoder(state):
             'time': int(info_time) if info_time else None,
         },
         'delay': delay,
-        'destination_name': destination_station,
-        'destination_id': get_station_id_by_name(destination_station),
-        'arrival_time': info_box[21][1][1][0][0][1],
+        'destination': {
+            'station': {
+                'name': destination_station,
+                'id': get_station_id_by_name(destination_station)
+            },
+            'arrival_time': int(destination_arrival_time) if destination_arrival_time else None
+        },
         'next_stop': {
             'station': {
                 'name': next_station,

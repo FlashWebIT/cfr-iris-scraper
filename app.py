@@ -10,6 +10,9 @@ stations = StationsGetter.get_stations()
 for station in stations:
     config.global_station_list[station["name"]] = station["station_id"]
 
+@app.route('/static/<path:path>')
+def send_res(path):
+    return send_from_directory('static', path)
 
 @app.route('/')
 def hello_world():

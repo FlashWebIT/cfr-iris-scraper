@@ -1,0 +1,370 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- Standard Meta -->
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+		<!-- Site Properties -->
+		<title>IRIS - Informații gară</title>
+
+		<link rel="stylesheet" type="text/css" href="semantic.css">
+		<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+		<script type="text/javascript" src="semantic.min.js"></script>
+
+		
+		<style type="text/css">
+			body {
+				background: url('img/gdn.jpg') no-repeat center center fixed;
+				background-size: cover;
+			}
+			.ui.menu .item img.logo {
+				margin-right: 1.5em;
+			}
+			.main.container {
+				background-color: rgba(255, 255, 255, 0.9);
+			}
+			.ui.footer.segment {
+				margin: 5em 0em 0em;
+				padding: 5em 0em;
+			}
+			
+			#mainMenu {
+				border-radius: 0;
+			}
+			
+			.trainNumber {
+				min-width: 7em;
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="mainMenu" class="ui top inverted stackable menu">
+			<div class="ui container">
+				<a href="?p=index" class="header item">
+					<img class="logo" src="img/iris.png">
+					IRIS
+				</a>
+				<a href="train.html" class="item">Informații tren</a>
+				<a href="#" class="item disabled">Informații gară</a>
+				<div class="right menu">
+					<div class="ui simple dropdown item">
+						<i class="ro flag"></i>
+						Română
+						<i class="dropdown icon"></i>
+						
+						<div class="menu">
+							<a class="disabled item" href="#">
+								<i class="ro flag"></i> Română
+							</a>
+							<a class="item" href="#">
+								<i class="gb flag"></i> English
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="ui container">
+			<div class="ui yellow icon message">
+				<i class="info icon"></i>
+				<i class="close icon"></i>
+				<div class="content">
+					<div class="header">
+						Prăjituri!
+					</div>
+					<p>Da, băi. Îți îndopăm calculatorul cu prăjituri, și trebuie 
+					să-ți spunem asta, că <a href="http://ec.europa.eu/ipg/basics/legal/cookies/index_en.htm">
+					așa vrea Merkel...</a> Dacă te doare-n cot, apasă pe <i class="close icon"></i>.
+					Dacă ești vegetarian, îți recomandăm cartea <a href="https://www.okazii.ro/mersul-trenurilor-de-c-l-tori-1984-1985-a161646278">
+					Mersul Trenurilor 1984-1985</a>, realizată din 100% hârtie organică.</p>
+				</div>
+			</div>		
+			<div class="ui stackable two column grid">
+	<div class="four wide column">
+		<div class="ui main container segment">
+			<h1 class="ui header">Informații gară</h1>
+			
+				<div class="ui form">
+				<div class="field">
+				<div class="ui fluid search normal selection dropdown">
+					<input type="hidden" name="station">
+					<i class="dropdown icon"></i>
+						<div class="default text">Alege gara...</div>
+						<div class="menu">
+						<div class="item" data-value="0">București Nord</div>
+						<div class="item" data-value="1">Constanța</div>
+						<div class="item" data-value="2">Ploiești</div>
+						<div class="item" data-value="3">Buzău</div>
+						<div class="item" data-value="4">Giurgiu</div>
+						<div class="item" data-value="5">Craiova</div>
+					</div>
+				</div>
+				</div>
+				<div class="ui fluid blue button">
+					<i class="search icon"></i>
+					Căutare
+				</div>
+			</div>
+			<div class="ui info message">
+				<div class="header">
+					Cum găsesc o gară?
+				</div>
+				<p>Pentru a găsi informații despre orele de sosire și plecare ale trenurilor dintr-o anume gară, introduceți numele gării în caseta de mai sus, și apăsați butonul <i class="search icon"></i>Căutare.</p>
+			</div>
+		</div>
+	</div>
+	<div class="twelve wide column">
+		<div class="ui main container segment">
+			<div class="ui clearing basic segment">
+				<h1 class="ui huge header">
+					<i class="train icon"></i>
+					<div class="content">București Nord Gr. A</div>
+				</h1>
+			</div>
+			<div class="ui divider"></div>
+			
+			<div id="trenuri" class="ui pointing four item menu">
+				<a class="active item" data-tab="first">Sosiri / Plecări</a>
+				<a class="item" data-tab="second">Sosiri</a>
+				<a class="item" data-tab="third">Plecări</a>
+				<a class="item" data-tab="fourth">
+					Trenuri anulate
+					<div class="floating ui circular green label">0</div>
+				</a>
+			</div>
+			<div class="ui bottom active tab segment" data-tab="first">
+				<div class="ui blue icon message">
+					<i class="info icon"></i>
+					<div class="content">
+						<div class="header">
+							Mai jos sunt afișate sosirile și plecările din gara selectată, din intervalul orar 17:19 - 21:19.
+						</div>
+						<p>Puteți alege să vedeți fie doar sosirile, doar plecările, ori trenurile anulate. Dacă doriți să vedeți lista completă a trenurilor de astăzi, apăsați pe butonul Vizualizați lista integrală.</p>
+					</div>
+				</div>
+				
+				<div id="trains" class="ui items list">
+					<div class="item">
+						<div class="ui basic segment">
+							<a class="ui fluid black big trainNumber label" href="#">
+								R 14035
+							</a>
+						</div>
+						
+						<div class="content">
+							<div class="header">București Nord - Brașov</div>
+							<div class="meta">
+								<span class="departure">Plecare la <strong>17:23</strong></span>
+								<span class="platform">Linia 7A</span>
+							</div>
+							<div class="description">
+								<p>Acest tren este operat de Regiotrans</p>
+							</div>
+							<div class="extra">
+								<a class="ui blue label">
+									<i class="info circle icon"></i>
+									Detalii
+								</a>
+								<div class="ui green label">
+									<i class="clock icon"></i>
+									La timp
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="ui divider"></div>
+					<div class="item">
+						<div class="ui basic segment">
+							<a class="ui fluid red big trainNumber label" href="#">
+								IR 460
+							</a>
+						</div>
+						
+						<div class="content">
+							<div class="header">Giurgiu Nord - București Nord</div>
+							<div class="meta">
+								<span class="arrival">Sosire la <strong>17:24</strong></span>
+								<span class="platform">Linia 13A</span>
+							</div>
+							<div class="description">
+								<p>Acest tren este operat de CFR Călători</p>
+							</div>
+							<div class="extra">
+								<a class="ui blue label">
+									<i class="info circle icon"></i>
+									Detalii
+								</a>
+								<div class="ui red label">
+									<i class="clock icon"></i>
+									Întârzie 26 min.
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="ui divider"></div>
+					<div class="item">
+						<div class="ui basic segment">
+							<a class="ui fluid red big trainNumber label" href="#">
+								IR 1596
+							</a>
+						</div>
+						
+						<div class="content">
+							<div class="header">Mangalia - Craiova</div>
+							<div class="meta">
+								<span class="arrival">Sosire la <strong>17:26</strong></span>
+								<span class="departure">Plecare la <strong>17:45</strong></span>
+								<span class="platform">Linia 6A</span>
+							</div>
+							<div class="description">
+								<p>Acest tren este operat de CFR Călători</p>
+							</div>
+							<div class="extra">
+								<a class="ui blue label">
+									<i class="info circle icon"></i>
+									Detalii
+								</a>
+								<div class="ui blue label">
+									<i class="clock icon"></i>
+									Sosește mai devreme cu 3 min.
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="ui divider"></div>
+					<div class="item">
+						<div class="ui basic segment">
+							<a class="ui fluid green big trainNumber label" href="#">
+								IC 12001-2
+							</a>
+						</div>
+						
+						<div class="content">
+							<div class="header">Curtici - București Nord</div>
+							<div class="meta">
+								<span class="arrival">Sosire la <strong>17:48</strong></span>
+							</div>
+							<div class="description">
+								<p>Acest tren este operat de CFR Călători</p>
+							</div>
+							<div class="extra">
+								<a class="ui blue label">
+									<i class="info circle icon"></i>
+									Detalii
+								</a>
+								<div class="ui red label">
+									<i class="clock icon"></i>
+									Întârzie 1h 3min.
+								</div>
+							</div>
+						</div>
+					</div>
+					</div>
+				<div class="ui basic clearing segment">
+					<a class="ui left floated large blue button">
+						<i class="content icon"></i>
+						Vizualizați lista integrală
+					</a>
+					<div class="ui right floated inverted pagination menu">
+						<a class="icon item">
+							<i class="left chevron icon"></i>
+						</a>
+						<a class="active item">1</a>
+						<a class="item">2</a>
+						<a class="item">3</a>
+						<a class="item">4</a>
+						<a class="icon item">
+							<i class="right chevron icon"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="ui bottom tab segment" data-tab="second">1B</div>
+			<div class="ui bottom tab segment" data-tab="third">1C</div>
+			<div class="ui bottom tab segment" data-tab="fourth">1C</div>
+			
+			
+		</div>
+	</div>
+</div>
+
+<script>
+$(document).ready(function(){
+	$('.ui.dropdown').dropdown();
+
+	$('#trenuri .item').tab({
+		cache: false,
+		// faking API request
+		apiSettings: {
+		  loadingDuration : 300,
+		  mockResponse    : function(settings) {
+			var response = {
+			  first  : 'AJAX Tab One',
+			  second : 'AJAX Tab Two',
+			  third  : 'AJAX Tab Three',
+			  fourth  : 'AJAX Tab Four'
+			};
+			return response[settings.urlData.tab];
+		  }
+		},
+		context : 'parent',
+		auto    : true,
+		path    : '/'
+	 });
+	});
+</script>
+		</div>
+			
+		<div class="ui inverted vertical footer segment">
+			<div class="ui center aligned container">
+				<div class="ui stackable inverted divided grid">
+					<div class="three wide column">
+						<h4 class="ui inverted header">Link-uri angajați CFR</h4>
+						<div class="ui inverted link list">
+							<a href="http://www.pizzahutdelivery.ro/" class="item">Pizza Hut</a>
+							<a href="http://www.hotangels.ro" class="item">Hot Angels</a>
+							<a href="http://a3.files.biography.com/image/upload/c_fill,cs_srgb,dpr_1.0,g_face,h_300,q_80,w_300/MTIwNjA4NjM0MjAzODMzODY4.jpg" class="item">SolitaireOnline.ro.com.kp</a>
+							<a href="http://www.amuritiliescu.ro" class="item">amuritiliescu.ro</a>
+						</div>
+					</div>
+					<div class="three wide column">
+						<h4 class="ui inverted header">Link-uri plebei</h4>
+						<div class="ui inverted link list">
+							<a href="http://www.cfrcalatori.ro/167" class="item">Hotline CFR</a>
+							<a href="http://www.cfrcalatori.ro/ro/info-util" class="item">Hotline fără unguri</a>
+							<a href="https://play.google.com/store/apps/details?id=ro.mobiessence.android.clevertaxi.speedtaxi&hl=ro" class="item">Speedtaxi</a>
+							<a href="http://transferoviarcalatori.ro/" class="item">TFC</a>
+						</div>
+					</div>
+					<div class="ten wide column">
+						<h4 class="ui inverted header">Firmele canceroase care fac acest site non-canceros posibil</h4>
+						<div class="ui small images">
+							<a href="http://www.infofer.ro/">
+								<img class="ui image" src="img/infofer.png" alt="Informatică Feroviară">
+							</a>
+							<a href="http://www.cfr.ro/">
+								<img class="ui image" src="img/cfr.png" alt="Căile Ferate Române">
+							</a>
+							<a href="http://mt.gov.ro/">
+								<img class="ui image" src="img/mt.png" alt="Ministerul Transporturilor">
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="ui inverted section divider"></div>
+				<div class="ui container">&copy; 2016, S.C. Informatică Feroviară S.A. Design realizat de Tiberiu Danciu.</div>
+				<div class="ui horizontal inverted small divided link list">
+					<a class="item" href="#">Site Map</a>
+					<a class="item" href="#">Contact Us</a>
+					<a class="item" href="#">Terms and Conditions</a>
+					<a class="item" href="#">Privacy Policy</a>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

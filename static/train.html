@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html ng-app="cfrApp" ng-controller="main">
+	<head>
+		<!-- Standard Meta -->
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+		<!-- Site Properties -->
+		<title>IRIS - Informații feroviare</title>
+
+		<link rel="stylesheet" type="text/css" href="semantic.css">
+		<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+		<script type="text/javascript" src="semantic.min.js"></script>
+		<script type="text/javascript" src="angular.js"></script>
+		
+		<style type="text/css">
+			body {
+				background: url('img/gdn.jpg') no-repeat center center fixed;
+				background-size: cover;
+			}
+			.ui.menu .item img.logo {
+				margin-right: 1.5em;
+			}
+			.main.container {
+				background-color: rgba(255, 255, 255, 0.9);
+			}
+			.ui.footer.segment {
+				margin: 5em 0em 0em;
+				padding: 5em 0em;
+			}
+			
+			#mainMenu {
+				border-radius: 0;
+			}
+			
+			.trainNumber {
+				min-width: 7em;
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="mainMenu" class="ui top inverted stackable menu">
+			<div class="ui container">
+				<a href="?p=index" class="header item">
+					<img class="logo" src="img/iris.png">
+					IRIS
+				</a>
+				<a href="#" class="item disabled">Informații tren</a>
+				<a href="station.html" class="item">Informații gară</a>
+				<div class="right menu">
+					<div class="ui simple dropdown item">
+						<i class="ro flag"></i>
+						Română
+						<i class="dropdown icon"></i>
+						
+						<div class="menu">
+							<a class="disabled item" href="#">
+								<i class="ro flag"></i> Română
+							</a>
+							<a class="item" href="#">
+								<i class="gb flag"></i> English
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="ui container">
+			<div class="ui yellow icon message">
+				<i class="info icon"></i>
+				<i class="close icon"></i>
+				<div class="content">
+					<div class="header">
+						Prăjituri!
+					</div>
+					<p>Da, băi. Îți îndopăm calculatorul cu prăjituri, și trebuie 
+					să-ți spunem asta, că <a href="http://ec.europa.eu/ipg/basics/legal/cookies/index_en.htm">
+					așa vrea Merkel...</a> Dacă te doare-n cot, apasă pe <i class="close icon"></i>.
+					Dacă ești vegetarian, îți recomandăm cartea <a href="https://www.okazii.ro/mersul-trenurilor-de-c-l-tori-1984-1985-a161646278">
+					Mersul Trenurilor 1984-1985</a>, realizată din 100% hârtie organică.</p>
+				</div>
+			</div>		
+			<div class="ui stackable two column grid">
+	<div class="four wide column">
+		<div class="ui main container segment">
+			<h1 class="ui header">Informații tren</h1>
+			
+			<div class="ui fluid action input">
+				<input type="text" placeholder="Numărul trenului" id="search" autofocus="autofocus">
+				<button class="ui icon button" onclick="doSearch($('#search').val())">
+					<i class="search icon"></i>
+				</button>
+			</div>
+			
+			<div class="ui info message">
+				<div class="header">
+					Cum caut un tren?
+				</div>
+				<p>Pentru a găsi informații despre un tren, aflați numărul acestuia de pe titlul dv. de călătorie sau utilizând secțiunea <a href="#">Informații gări</a>. Ulterior, introduceți numărul în câmpul de mai sus, și apăsați butonul <i class="search icon"></i>.</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="twelve wide column">
+		<div class="ui blue message" ng-if="loading"><i class="notched circle loading icon"></i> Se încarcă date...</div>
+		<div class="ui main container segment"  ng-if="data">
+			<div class="ui clearing basic segment">
+				<h3 class="ui huge left floated header">
+					<i class="train icon"></i>
+					<div class="content">{{data[ind].info_box.rank}} {{data[ind].info_box.train_id}}</div>
+				</h3>
+				<h3 class="ui medium right floated header">
+					{{data[ind].info_box.route.split('-')[0]}} <i class="arrow right icon"></i> {{data[ind].info_box.route.split('-')[1]}}
+				</h3>
+			</div>
+			<a class="ui large green left ribbon label">{{data[ind].info_box.latest_information.status}} ({{formatDate(data[ind].info_box.latest_information.time)}}) - {{data[ind].info_box.latest_information.station.name}}</a>
+			<div class="ui divider"></div>
+			<div class="ui blue message"><i class="info icon"></i> Acest tren a plecat în data de {{data[ind].departure_date}}.</div>
+			
+			<div class="ui three small center aligned grid statistics">
+			  <div class="statistic">
+				<div class="value">
+				  <i class="clock icon"></i> {{data[ind].info_box.trip_duration}}
+				</div>
+				<div class="label">
+				  Durată
+				</div>
+			  </div>
+			  
+			  <div class="statistic">
+				<div class="value">
+				  <i class="road icon"></i> {{data[ind].info_box.distance.split(' ')[0]}}
+				</div>
+				<div class="label">
+				  Kilometri
+				</div>
+			  </div>
+			  <div class="statistic">
+				<div class="value">
+				  <img class="ui centered image" src="img/sntfc.png" alt="SNTFC-CFR-CALATORI">
+				</div>
+				<div class="label">
+				  Operator
+				</div>
+			  </div>
+			</div>
+			<div class="ui stackable four column grid">
+				<div class="row">
+					<div class="eight wide column">
+						<div class="ui icon orange message">
+						  <i class="announcement icon"></i>
+						  <div class="content">
+							<div class="header">
+							  Întârziere curentă
+							</div>
+							<p>{{data[ind].info_box.delay}} minute</p>
+						  </div>
+						</div>
+					</div>
+					<div class="eight wide column">
+						<div class="ui icon blue message">
+						  <i class="notched circle loading icon"></i>
+						  <div class="content">
+							<div class="header">
+								Ultima informație
+							</div>
+							<p>{{data[ind].info_box.latest_information.station.name}} [{{data[ind].info_box.latest_information.status}}]</p>
+						  </div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="eight wide column">
+						<div class="ui icon green message">
+						  <i class="marker icon"></i>
+						  <div class="content">
+							<div class="header">
+								Oră sosire în {{data[ind].info_box.destination.station.name}}
+							</div>
+							<p>(destinație)</p>
+							<p>{{formatDate(data[ind].info_box.destination.arrival_time)}}</p>
+						  </div>
+						</div>
+					</div>
+					<div class="eight wide column">
+						<div class="ui icon teal message">
+						  <i class="building icon"></i>
+						  <div class="content">
+							<div class="header">
+								Oră sosire în {{data[ind].info_box.next_stop.station.name}}
+							</div>
+							<p>(următoarea oprire)</p>
+							<p>{{formatDate(data[ind].info_box.next_stop.time)}}</p>
+						  </div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="ui divider"></div>
+			<button id="modalbtn" class="ui primary basic button">Detalii circulație</button>
+		</div>
+		<div class="ui main container segment"  ng-if="!data">
+			<br><br><br>
+			<center><h3>Introduceți numărul unui tren în stânga pentru a începe.</h3></center>
+			<br><br><br>
+		</div>
+	</div>
+</div>
+
+<div id="modaldiv" class="ui basic modal">
+	<i class="close icon"></i>
+	<div class="header">
+		Detalii circulație tren {{data[ind].info_box.rank}} {{data[ind].info_box.train_id}} cu plecarea în {{data[ind].departure_date}}
+	</div>
+	<table class="ui celled padded table">
+		<thead>
+			<tr>
+				<th class="single line">Km</th>
+				<th>Stația</th>
+				<th>Sosire</th>
+				<th>Oprire</th>
+				<th>Plecare</th>
+				<th>Real/Estimat</th>
+				<th>Întârz.</th>
+				<th>Obs.</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="stop in data[ind].route_data">
+				<td>
+					<h2 class="ui center aligned header">{{stop.milepost}}</h2>
+				</td>
+				<td class="single line">{{stop.station.name}}</td>
+				<td>{{formatTime(stop.arrival_time)}}</td>
+				<td><span ng-if="stop.stop_duration">{{stop.stop_duration}} min</span></td>
+				<td>{{formatTime(stop.departure_time)}}</td>
+				<td><span ng-if="stop.is_real_time">Real</span><span ng-if="!stop.is_real_time">Estimat</span></td>
+				<td ng-class="{'negative': (stop.delay>=7||stop.delay<=-7), 'positive': (stop.delay<7||stop.delay>7)}">{{stop.delay}}</td>
+				<td>{{stop.mentions}}</td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="actions">
+		<div class="ui ok blue basic inverted button">
+			<i class="close icon"></i>
+			Închide
+		</div>
+	</div>
+</div>
+
+<script>
+	$(document).ready(function(){
+		 $('#modalbtn').click(function(){
+			$('#modaldiv').modal('show');    
+		 });
+	});
+</script>
+
+		</div>
+			
+		<div class="ui inverted vertical footer segment">
+			<div class="ui center aligned container">
+				<div class="ui stackable inverted divided grid">
+					<div class="three wide column">
+						<h4 class="ui inverted header">Link-uri angajați CFR</h4>
+						<div class="ui inverted link list">
+							<a href="http://www.pizzahutdelivery.ro/" class="item">Pizza Hut</a>
+							<a href="http://www.hotangels.ro" class="item">Hot Angels</a>
+							<a href="http://a3.files.biography.com/image/upload/c_fill,cs_srgb,dpr_1.0,g_face,h_300,q_80,w_300/MTIwNjA4NjM0MjAzODMzODY4.jpg" class="item">SolitaireOnline.ro.com.kp</a>
+							<a href="http://www.amuritiliescu.ro" class="item">amuritiliescu.ro</a>
+						</div>
+					</div>
+					<div class="three wide column">
+						<h4 class="ui inverted header">Link-uri plebei</h4>
+						<div class="ui inverted link list">
+							<a href="http://www.cfrcalatori.ro/167" class="item">Hotline CFR</a>
+							<a href="http://www.cfrcalatori.ro/ro/info-util" class="item">Hotline fără unguri</a>
+							<a href="https://play.google.com/store/apps/details?id=ro.mobiessence.android.clevertaxi.speedtaxi&hl=ro" class="item">Speedtaxi</a>
+							<a href="http://transferoviarcalatori.ro/" class="item">TFC</a>
+						</div>
+					</div>
+					<div class="ten wide column">
+						<h4 class="ui inverted header">Firmele canceroase care fac acest site non-canceros posibil</h4>
+						<div class="ui small images">
+							<a href="http://www.infofer.ro/">
+								<img class="ui image" src="img/infofer.png" alt="Informatică Feroviară">
+							</a>
+							<a href="http://www.cfr.ro/">
+								<img class="ui image" src="img/cfr.png" alt="Căile Ferate Române">
+							</a>
+							<a href="http://mt.gov.ro/">
+								<img class="ui image" src="img/mt.png" alt="Ministerul Transporturilor">
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="ui inverted section divider"></div>
+				<div class="ui container">&copy; 2016, S.C. Informatică Feroviară S.A. Design realizat de Tiberiu Danciu.</div>
+				<div class="ui horizontal inverted small divided link list">
+					<a class="item" href="#">Site Map</a>
+					<a class="item" href="#">Contact Us</a>
+					<a class="item" href="#">Terms and Conditions</a>
+					<a class="item" href="#">Privacy Policy</a>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		function str_pad(n) {
+		    return String("00" + n).slice(-2);
+		}
+
+		var app = angular.module("cfrApp", []);
+
+		app.controller('main', function ($scope, $http, $window) {
+		    $scope.ind=0;$scope.loading=false;
+		    $scope.formatDate = function(ts){
+		    	if(!ts) return '';
+		    	dt = new Date(ts*1000);
+		    	return str_pad(dt.getDate())+"."+str_pad(dt.getMonth()+1)+"."+dt.getFullYear()+" "+str_pad(dt.getHours())+":"+str_pad(dt.getMinutes());
+		    }
+		    $scope.formatTime = function(ts){
+		    	if(!ts) return '';
+		    	dt = new Date(ts*1000);
+		    	return str_pad(dt.getHours())+":"+str_pad(dt.getMinutes());
+		    }
+		});
+
+		function doSearch(id){
+			scope = angular.element($("html")).scope();
+			scope.$apply(function(){
+					scope.loading=true;
+				})
+			$.get('/train/'+id,function(data){
+				scope.$apply(function(){
+					scope.data=data;
+					scope.loading=false;
+				})
+			})
+		}
+	</script>
+</html>
