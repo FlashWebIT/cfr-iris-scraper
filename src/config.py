@@ -1,1 +1,1 @@
-global_station_list = []
+global_station_list = {}

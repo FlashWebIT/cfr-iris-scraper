@@ -4,7 +4,12 @@ from pprint import pprint
 from flask import Flask, jsonify
 app = Flask(__name__)
 
-config.global_station_list = StationsGetter.get_stations();
+# Generate the station lookup table
+config.global_station_list = {}
+stations = StationsGetter.get_stations()
+for station in stations:
+    config.global_station_list[station["name"]] = station["station_id"]
+
 
 @app.route('/')
 def hello_world():
@@ -16,16 +21,13 @@ def get_train(train_id):
     train_list = TrainPageGetter.get_train(train_id)
     return jsonify(train_list)
 
+
 @app.route('/get-stations/')
 def get_stations():
-    return jsonify(config.global_station_list)\
+    return jsonify(stations)
+
 
 @app.route('/station/<int:station_id>')
 def get_timetable(station_id):
     timetable = StationTimetableGetter.get_timetable(station_id)
     return jsonify(timetable)
-
-#TrainPageGetter.get_train(15594)
-#TrainPageGetter.get_train(1684)
-#TrainPageGetter.get_train(15531)
-#pprint(StationTimetableGetter.get_timetable(10017))
