@@ -200,7 +200,7 @@
 				</div>
 			</div>
 			<div class="ui divider"></div>
-			<button id="modalbtn" class="ui primary basic button">Detalii circulație</button>
+			<button id="modalbtn" class="ui primary basic button" onclick="$('.ui.basic.modal').modal('show');">Detalii circulație</button>
 		</div>
 		<div class="ui main container segment"  ng-if="!data">
 			<br><br><br>
@@ -314,6 +314,12 @@
 		}
 
 		var app = angular.module("cfrApp", []);
+
+		$("#search").on('keyup', function (e) {
+		    if (e.keyCode === 13) {
+		        doSearch($('#search').val());
+		    }
+		});
 
 		app.controller('main', function ($scope, $http, $window) {
 		    $scope.ind=0;$scope.loading=false;
