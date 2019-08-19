@@ -3,6 +3,7 @@
 	<head>
 		<!-- Standard Meta -->
 		<meta charset="utf-8" />
+		<meta name="theme-color" content="#1b1c1d">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="icon" type="image/png" href="img/iris.png" />
@@ -351,6 +352,12 @@
 					scope.loading=false;
 				})
 			})
+		}
+
+		if(window.location.href.indexOf('?tren=')!=-1){
+			setTimeout(function(){
+				doSearch(window.location.href.split('?tren=')[1]);
+			},50);
 		}
 	</script>
 </html>

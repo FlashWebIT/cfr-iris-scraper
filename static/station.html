@@ -3,6 +3,7 @@
 	<head>
 		<!-- Standard Meta -->
 		<meta charset="utf-8" />
+		<meta name="theme-color" content="#1b1c1d">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<link rel="icon" type="image/png" href="img/iris.png" />
@@ -163,8 +164,8 @@
 								<p>Acest tren este operat de {{train.operator}}</p>
 							</div>
 							<div class="extra">
-								<a class="ui blue label">
-									<i class="info circle icon" ng-click="detailOpen(train.train_id)"></i>
+								<a class="ui blue label" ng-href="train.html?tren={{train.train_id}}" target="_blank">
+									<i class="info circle icon"></i>
 									Detalii
 								</a>
 								<div class="ui green label" ng-if="train.delay==0">
@@ -296,16 +297,9 @@ $(document).ready(function(){
 	<script type="text/javascript">
 		var app = angular.module("cfrApp", []);
 
-		function detailOpen(link){
-			console.log(link);
-		}
-
-		app.controller('main', ['$scope', '$window',function ($scope, $window) {
+		app.controller('main', function ($scope, $window) {
 		    $scope.loading=false;$scope.Math = window.Math;
-		    $scope.detailOpen = function(id){
-		    	$window.detailOpen('train.html?tren='+id);
-		    }
-		}]);
+		});
 
 		$.get('/get-stations', function(data){
 			for(i=0; i<data.length; i++)
