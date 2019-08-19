@@ -95,13 +95,8 @@
 					<input type="hidden" name="station">
 					<i class="dropdown icon"></i>
 						<div class="default text">Alege gara...</div>
-						<div class="menu">
-						<div class="item" data-value="0">București Nord</div>
-						<div class="item" data-value="1">Constanța</div>
-						<div class="item" data-value="2">Ploiești</div>
-						<div class="item" data-value="3">Buzău</div>
-						<div class="item" data-value="4">Giurgiu</div>
-						<div class="item" data-value="5">Craiova</div>
+						<div class="menu" id="stations">
+						
 					</div>
 				</div>
 				</div>
@@ -367,4 +362,10 @@ $(document).ready(function(){
 			</div>
 		</div>
 	</body>
+	<script type="text/javascript">
+		$.get('/get-stations', function(data){
+			for(i=0; i<data.length; i++)
+				$('#stations').append('<div class="item" data-value="'+data[i].station_id+'">'+data[i].name+'</div>');
+		})
+	</script>
 </html>
