@@ -118,7 +118,7 @@
 			</div>
 			<a class="ui large green left ribbon label">{{data[ind].info_box.latest_information.status}} ({{formatDate(data[ind].info_box.latest_information.time)}}) - {{data[ind].info_box.latest_information.station.name}}</a>
 			<div class="ui divider"></div>
-			<div class="ui blue message"><i class="info icon"></i> Acest tren a plecat în data de {{data[ind].departure_date}}.</div>
+			<div class="ui blue message"><i class="info icon"></i> Acest tren a plecat în data de {{data[ind].departure_date}}. <span ng-if="data.length!=1">Pentru  trenul cu plecare în data de {{data[ind==0?1:0].departure_date}}, apăsați <button ng-click="switchPage(ind==0?1:0)" class="mini ui button">aici</button></span></div>
 			
 			<div class="ui three small center aligned grid statistics">
 			  <div class="statistic">
@@ -332,6 +332,10 @@
 		    	if(!ts) return '';
 		    	dt = new Date(ts*1000);
 		    	return str_pad(dt.getHours())+":"+str_pad(dt.getMinutes());
+		    }
+		    $scope.switchPage = function(){
+		    	if($scope.ind==0) $scope.ind=1;
+		    	else $scope.ind=0;
 		    }
 		});
 
