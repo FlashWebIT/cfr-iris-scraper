@@ -8,7 +8,7 @@
 		<link rel="icon" type="image/png" href="img/iris.png" />
 
 		<!-- Site Properties -->
-		<title>IRIS - Informații feroviare</title>
+		<title>IRIS - Informații tren</title>
 
 		<link rel="stylesheet" type="text/css" href="semantic.css">
 		<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
@@ -100,14 +100,14 @@
 				<div class="header">
 					Cum caut un tren?
 				</div>
-				<p>Pentru a găsi informații despre un tren, aflați numărul acestuia de pe titlul dv. de călătorie sau utilizând secțiunea <a href="#">Informații gări</a>. Ulterior, introduceți numărul în câmpul de mai sus, și apăsați butonul <i class="search icon"></i>.</p>
+				<p>Pentru a găsi informații despre un tren, aflați numărul acestuia de pe titlul dv. de călătorie sau utilizând secțiunea <a href="#">Informații gări</a>. Ulterior, introduceți numărul în câmpul de mai sus, și apăsați butonul <i class="search icon"></i> sau tasta enter.</p>
 			</div>
 		</div>
 	</div>
 
 	<div class="twelve wide column">
 		<div class="ui blue message" ng-if="loading"><i class="notched circle loading icon"></i> Se încarcă date...</div>
-		<div class="ui main container segment"  ng-if="data">
+		<div class="ui main container segment" ng-if="data">
 			<div class="ui clearing basic segment">
 				<h3 class="ui huge left floated header">
 					<i class="train icon"></i>
@@ -155,9 +155,9 @@
 						  <i class="announcement icon"></i>
 						  <div class="content">
 							<div class="header">
-							  Întârziere curentă
+							  Abatere orar curentă
 							</div>
-							<p>{{data[ind].info_box.delay}} minute</p>
+							<p><span ng-if="data[ind].info_box.delay!=0">{{data[ind].info_box.delay<0?"Mai devreme cu":"Întârziat cu"}}</span> {{Math.abs(data[ind].info_box.delay)}} minute</p>
 						  </div>
 						</div>
 					</div>
@@ -323,7 +323,7 @@
 		});
 
 		app.controller('main', function ($scope, $http, $window) {
-		    $scope.ind=0;$scope.loading=false;
+		    $scope.ind=0;$scope.loading=false;$scope.Math = window.Math;
 		    $scope.formatDate = function(ts){
 		    	if(!ts) return '';
 		    	dt = new Date(ts*1000);

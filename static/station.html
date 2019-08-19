@@ -1,11 +1,11 @@
-
 <!DOCTYPE html>
-<html>
+<html ng-app="cfrApp" ng-controller="main">
 	<head>
 		<!-- Standard Meta -->
 		<meta charset="utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+		<link rel="icon" type="image/png" href="img/iris.png" />
 
 		<!-- Site Properties -->
 		<title>IRIS - Informații gară</title>
@@ -13,7 +13,7 @@
 		<link rel="stylesheet" type="text/css" href="semantic.css">
 		<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
 		<script type="text/javascript" src="semantic.min.js"></script>
-
+		<script type="text/javascript" src="angular.js"></script>
 		
 		<style type="text/css">
 			body {
@@ -100,30 +100,27 @@
 					</div>
 				</div>
 				</div>
-				<div class="ui fluid blue button">
-					<i class="search icon"></i>
-					Căutare
-				</div>
 			</div>
 			<div class="ui info message">
 				<div class="header">
 					Cum găsesc o gară?
 				</div>
-				<p>Pentru a găsi informații despre orele de sosire și plecare ale trenurilor dintr-o anume gară, introduceți numele gării în caseta de mai sus, și apăsați butonul <i class="search icon"></i>Căutare.</p>
+				<p>Pentru a găsi informații despre orele de sosire și plecare ale trenurilor dintr-o anume gară, introduceți numele gării în caseta de mai sus, și apăsați pe una din sugestiile afișate sau apăsați tasta <i>enter</i> când aceasta este selectată.
 			</div>
 		</div>
 	</div>
 	<div class="twelve wide column">
-		<div class="ui main container segment">
+		<div class="ui blue message" ng-if="loading"><i class="notched circle loading icon"></i> Se încarcă date...</div>
+		<div class="ui main container segment" ng-if="data">
 			<div class="ui clearing basic segment">
 				<h1 class="ui huge header">
 					<i class="train icon"></i>
-					<div class="content">București Nord Gr. A</div>
+					<div class="content">{{name}}</div>
 				</h1>
 			</div>
 			<div class="ui divider"></div>
 			
-			<div id="trenuri" class="ui pointing four item menu">
+			<div id="trains" class="ui pointing four item menu">
 				<a class="active item" data-tab="first">Sosiri / Plecări</a>
 				<a class="item" data-tab="second">Sosiri</a>
 				<a class="item" data-tab="third">Plecări</a>
@@ -133,7 +130,7 @@
 				</a>
 			</div>
 			<div class="ui bottom active tab segment" data-tab="first">
-				<div class="ui blue icon message">
+				<div class="ui blue icon message" style="display: none">
 					<i class="info icon"></i>
 					<div class="content">
 						<div class="header">
@@ -142,124 +139,53 @@
 						<p>Puteți alege să vedeți fie doar sosirile, doar plecările, ori trenurile anulate. Dacă doriți să vedeți lista completă a trenurilor de astăzi, apăsați pe butonul Vizualizați lista integrală.</p>
 					</div>
 				</div>
-				
-				<div id="trains" class="ui items list">
+
+				<div id="trains" class="ui items list" ng-repeat="train in data">
+
 					<div class="item">
 						<div class="ui basic segment">
-							<a class="ui fluid black big trainNumber label" href="#">
-								R 14035
+							<a class="ui fluid red big trainNumber label" href="#" ng-if="train.rank=='IR'">
+								{{train.rank}} {{train.train_id}}
+							</a>
+							<a class="ui fluid black big trainNumber label" href="#" ng-if="train.rank!='IR'">
+								{{train.rank}} {{train.train_id}}
 							</a>
 						</div>
 						
 						<div class="content">
-							<div class="header">București Nord - Brașov</div>
+							<div class="header"><b ng-if="train.is_destination">Sosește de la </b> <b ng-if="train.is_origin">Pleacă spre </b> <b ng-if="train.is_stop">Circulă pe ruta </b> <span ng-if="train.is_destination||train.is_stop">{{train.origin}}</span> <span ng-if="train.is_stop">-</span> <span ng-if="train.is_origin||train.is_stop">{{train.destination}}</span></div>
 							<div class="meta">
-								<span class="departure">Plecare la <strong>17:23</strong></span>
-								<span class="platform">Linia 7A</span>
+								<span class="arrival" ng-if="train.is_destination||train.is_stop">Sosește la <strong>{{train.arrival_time}}</strong></span>
+								<span class="departure" ng-if="train.is_origin||train.is_stop">Plecare la <strong>{{train.departure_time}}</strong></span>
+								<span class="platform" ng-if='train.platform'>Linia {{train.platform}}</span>
 							</div>
 							<div class="description">
-								<p>Acest tren este operat de Regiotrans</p>
+								<p>Acest tren este operat de {{train.operator}}</p>
 							</div>
 							<div class="extra">
 								<a class="ui blue label">
-									<i class="info circle icon"></i>
+									<i class="info circle icon" ng-click="detailOpen(train.train_id)"></i>
 									Detalii
 								</a>
-								<div class="ui green label">
+								<div class="ui green label" ng-if="train.delay==0">
 									<i class="clock icon"></i>
 									La timp
 								</div>
-							</div>
-						</div>
-					</div>
-					<div class="ui divider"></div>
-					<div class="item">
-						<div class="ui basic segment">
-							<a class="ui fluid red big trainNumber label" href="#">
-								IR 460
-							</a>
-						</div>
-						
-						<div class="content">
-							<div class="header">Giurgiu Nord - București Nord</div>
-							<div class="meta">
-								<span class="arrival">Sosire la <strong>17:24</strong></span>
-								<span class="platform">Linia 13A</span>
-							</div>
-							<div class="description">
-								<p>Acest tren este operat de CFR Călători</p>
-							</div>
-							<div class="extra">
-								<a class="ui blue label">
-									<i class="info circle icon"></i>
-									Detalii
-								</a>
-								<div class="ui red label">
+								<div class="ui blue label" ng-if="(train.delay<=6&&train.delay>0)||(train.delay<0&&train.delay>=-6)">
 									<i class="clock icon"></i>
-									Întârzie 26 min.
+									<span ng-if="train.delay!=0">{{train.delay<0?"Mai devreme cu":"Întârziat cu"}}</span> {{Math.abs(train.delay)}} minute
+								</div>
+								<div class="ui red label" ng-if="train.delay>6||train.delay<-6">
+									<i class="clock icon"></i>
+									<span ng-if="train.delay!=0">{{train.delay<0?"Mai devreme cu":"Întârziat cu"}}</span> {{Math.abs(train.delay)}} minute
 								</div>
 							</div>
 						</div>
 					</div>
 					<div class="ui divider"></div>
-					<div class="item">
-						<div class="ui basic segment">
-							<a class="ui fluid red big trainNumber label" href="#">
-								IR 1596
-							</a>
-						</div>
-						
-						<div class="content">
-							<div class="header">Mangalia - Craiova</div>
-							<div class="meta">
-								<span class="arrival">Sosire la <strong>17:26</strong></span>
-								<span class="departure">Plecare la <strong>17:45</strong></span>
-								<span class="platform">Linia 6A</span>
-							</div>
-							<div class="description">
-								<p>Acest tren este operat de CFR Călători</p>
-							</div>
-							<div class="extra">
-								<a class="ui blue label">
-									<i class="info circle icon"></i>
-									Detalii
-								</a>
-								<div class="ui blue label">
-									<i class="clock icon"></i>
-									Sosește mai devreme cu 3 min.
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="ui divider"></div>
-					<div class="item">
-						<div class="ui basic segment">
-							<a class="ui fluid green big trainNumber label" href="#">
-								IC 12001-2
-							</a>
-						</div>
-						
-						<div class="content">
-							<div class="header">Curtici - București Nord</div>
-							<div class="meta">
-								<span class="arrival">Sosire la <strong>17:48</strong></span>
-							</div>
-							<div class="description">
-								<p>Acest tren este operat de CFR Călători</p>
-							</div>
-							<div class="extra">
-								<a class="ui blue label">
-									<i class="info circle icon"></i>
-									Detalii
-								</a>
-								<div class="ui red label">
-									<i class="clock icon"></i>
-									Întârzie 1h 3min.
-								</div>
-							</div>
-						</div>
-					</div>
-					</div>
+					
+				</div>
+				
 				<div class="ui basic clearing segment">
 					<a class="ui left floated large blue button">
 						<i class="content icon"></i>
@@ -284,6 +210,11 @@
 			<div class="ui bottom tab segment" data-tab="fourth">1C</div>
 			
 			
+		</div>
+		<div class="ui main container segment"  ng-if="!data">
+			<br><br><br>
+			<center><h3>Apăsați pe numele unei stații în stânga pentru a începe.</h3></center>
+			<br><br><br>
 		</div>
 	</div>
 </div>
@@ -363,9 +294,36 @@ $(document).ready(function(){
 		</div>
 	</body>
 	<script type="text/javascript">
+		var app = angular.module("cfrApp", []);
+
+		function detailOpen(link){
+			console.log(link);
+		}
+
+		app.controller('main', ['$scope', '$window',function ($scope, $window) {
+		    $scope.loading=false;$scope.Math = window.Math;
+		    $scope.detailOpen = function(id){
+		    	$window.detailOpen('train.html?tren='+id);
+		    }
+		}]);
+
 		$.get('/get-stations', function(data){
 			for(i=0; i<data.length; i++)
-				$('#stations').append('<div class="item" data-value="'+data[i].station_id+'">'+data[i].name+'</div>');
+				$('#stations').append('<div class="item" onkeydown="loadSta('+data[i].station_id+','+"'"+data[i].name+"'"+')" onclick="loadSta('+data[i].station_id+','+"'"+data[i].name+"'"+')" data-value="'+data[i].station_id+'">'+data[i].name+'</div>');
 		})
+
+		function loadSta(sta_id,sta_n){
+			scope = angular.element($("html")).scope();
+			scope.$apply(function(){
+					scope.loading=true;
+				})
+			$.get('/station/'+sta_id,function(data){
+				scope.$apply(function(){
+					scope.data=data;
+					scope.name=sta_n;
+					scope.loading=false;
+				})
+			})
+		}
 	</script>
 </html>
