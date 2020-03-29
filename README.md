@@ -12,12 +12,30 @@ The program scrapes all its information from ASP.Net's __VIEWSTATE variable.
 
 ## Installation & Requirments
 - You need Python 3.6+ and Pipenv installed on your system.
+```sh
+$ apt install python3 python3-pip
+$ pip3 install pipenv
+```
 - Clone the repository and install the module dependencies:
 ```sh
+$ git clone https://github.com/BodoMinea/cfr-iris-scraper.git
 $ cd cfr-iris-scraper
 $ pipenv install
 ```
 - Run the API server as specified in the [Flask Documentation](https://flask.palletsprojects.com/en/1.1.x/cli/).
+```sh
+$ pipenv run flask run
+```
+### Notes
+- You may need to edit the Pipfile to match your local Python version in order to successfully install
+```Pipfile
+python_version = "3.6.9"
+```
+- Flask listens by default only to local requests. It's advisable to keep it like this and install a reverse proxy for larger deployments, but to access your test machine from LAN, run with:
+```sh
+$ pipenv run flask run --host 0.0.0.0
+```
+This will bind on all available interfaces.
 
 ## Usage
 ### Station information
@@ -36,6 +54,9 @@ the next station and other useful information.
 Just point your browser to http://localhost:5000/train/ID, where ID is the train's unique number. You can get these IDs
 from the station information feed. For example, you can retrieve the information for train IR 1651 from Bucharest North
 to Suceava North (valid as of April 2017) by accessing http://localhost:5000/train/1651.
+
+### Web GUI (JS Client)
+There is also a web client included with the API. Head to http://localhost:5000/static/station.html, http://localhost:5000/static/train.html or http://localhost:5000/static/train.html?tren=9351 (predefined train number) to see it.
 
 ## Ideas
 While the official apps themselves work but may not look so great, romanian developers did their best to create some
@@ -75,6 +96,6 @@ Infofer offers with their service. This will be updated in the future.~~ Fixed: 
 Public information web-service provided by CFR S.A. through Informatica Feroviara:
 http://appiris.infofer.ro/SosPlcRO.aspx, http://appiris.infofer.ro/MyTrainRO.aspx,
 http://appiris.infofer.ro/MersTrenRo.aspx. This is information from infrastructure administration and not a specific
-passenger carrier. Official passenger timetables are found here: http://mersultrenurilorcfr.ro, http://infofer.ro/
-and static data source with timetables updated at the end of each year:
+passenger carrier. Official passenger timetables are found here: http://mersultrenurilor.infofer.ro,
+and static XML data source with timetables updated at the end of each year:
 http://data.gov.ro/organization/sc-informatica-feroviara-sa
