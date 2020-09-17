@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
+
+## [2.1.0] - 2020-09-17
+### Changed
+- Better sanitization of the data
+### Added
+- More endpoints for viewing the departures and arrivals in a station
+
 ## [2.0.0] - 2019-08-16
 ### Changed
 - Improved the scraper such that it makes use of the __VIEWSTATE variables passed down by the server.
