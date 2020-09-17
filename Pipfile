@@ -9,6 +9,8 @@ verify_ssl = true
 requests-html = "*"
 flask = "*"
 viewstate = {git = "https://github.com/TiberiuD/viewstate"}
+python-dateutil = "*"
+flask-cors = "*"
 
 [requires]
-python_version = "3.6.5"
+python_version = "3.6"

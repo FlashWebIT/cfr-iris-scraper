@@ -1,6 +1,8 @@
 from viewstate import ViewState
 import requests_html
-from pprint import pprint
+from datetime import datetime
+from dateutil import tz
+
 
 base_url = "https://appiris.infofer.ro/SosPlcRO.aspx"
 
@@ -31,18 +33,57 @@ def state_decoder(state):
         train_data = {
             'rank': train[1][0][0][1],
             'train_id': train[3][0][0][1],
-            'operator': train[5][0][0][1],
-            'origin': train[7][0][0][1],
-            'delay': 0 if train[9][0][0][1]=='&nbsp;' else int(train[9][0][0][1]),
-            'arrival_time': train[11][0][0][1],
-            'departure_time': train[13][0][0][1],
-            'destination': train[15][0][0][1],
-            'platform': train[17][0][0][1] if train[17][0][0][1]!='&nbsp;' else None,
+            'operator': train[5][0][0][1].strip(),
+            'origin': train[7][0][0][1].strip().replace('&nbsp;', ''),
+            'delay': train[9][0][0][1].replace('&nbsp;', ''),
+            'arrival_time': train[11][0][0][1].replace('&nbsp;', ''),
+            'departure_time': train[13][0][0][1].replace('&nbsp;', ''),
+            'arrival_timestamp': None,
+            'departure_timestamp': None,
+            'destination': train[15][0][0][1].strip().replace('&nbsp;', ''),
+            'platform': train[17][0][0][1].strip().replace('&nbsp;', ''),
             'is_origin': train[19][0][0][1] == 'O',
             'is_destination': train[19][0][0][1] == 'D',
             'is_stop': train[19][0][0][1] == 'S',
-            'mentions': train[21][0][0][1],
+            'mentions': train[21][0][0][1].strip().replace('&nbsp;', ''),
         }
+
+        # Sanitize the data
+        if not train_data['delay']:
+            train_data['delay'] = 0
+        else:
+            train_data['delay'] = int(train_data['delay'])
+
+        if not train_data['arrival_time']:
+            train_data['arrival_time'] = None
+
+        if not train_data['departure_time']:
+            train_data['departure_time'] = None
+
+        if not train_data['origin']:
+            train_data['origin'] = None
+
+        if not train_data['destination']:
+            train_data['destination'] = None
+
+        if not train_data['platform']:
+            train_data['platform'] = None
+
+        if not train_data['mentions']:
+            train_data['mentions'] = None
+
+        # Add any required timestamps
+        timezone = tz.gettz('Europe/Bucharest')
+        today = datetime.combine(datetime.now(tz=timezone), datetime.min.time())
+
+        if train_data['arrival_time']:
+            arrival_time = datetime.strptime(train_data['arrival_time'], '%H:%M').time()
+            train_data['arrival_timestamp'] = datetime.combine(today, arrival_time, timezone).isoformat()
+
+        if train_data['departure_time']:
+            arrival_time = datetime.strptime(train_data['departure_time'], '%H:%M').time()
+            train_data['departure_timestamp'] = datetime.combine(today, arrival_time, timezone).isoformat()
+
         trains.append(train_data)
 
     return trains
